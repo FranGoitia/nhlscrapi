@@ -126,7 +126,7 @@ class ShotCt(ShotEventTallyBase):
     """
     def __init__(self):
         super(ShotCt, self).__init__(
-            count_play=lambda play: isinstance(play.event, EV.Shot)
+            count_play=lambda play: isinstance(play.event, EV.Shot) and play.period <= 3
         )
 
 
@@ -139,7 +139,7 @@ class BlockCt(ShotEventTallyBase):
     """
     def __init__(self):
         super(BlockCt, self).__init__(
-            count_play=lambda play: isinstance(play.event, EV.Block)
+            count_play=lambda play: isinstance(play.event, EV.Block) and play.period <= 3
         )
 
 
@@ -153,7 +153,7 @@ class EvenStBlockCt(ShotEventTallyBase):
     """
     def __init__(self):
         super(EvenStBlockCt, self).__init__(
-            count_play=lambda play: isinstance(play.event, EV.Block) and play.strength == St.Even
+            count_play=lambda play: isinstance(play.event, EV.Block) and play.strength == St.Even and play.period <= 3
         )
 
 
@@ -168,7 +168,7 @@ class EvenStClBlockCt(ShotEventTallyBase):
     def __init__(self):
         self.score = Score()
         super(EvenStClBlockCt, self).__init__(
-            count_play=lambda play: isinstance(play.event, EV.Block) and play.strength == St.Even and is_close(self.score, play)
+            count_play=lambda play: isinstance(play.event, EV.Block) and play.strength == St.Even and is_close(self.score, play) and play.period <= 3
         )
 
     def update(self, play):
@@ -186,7 +186,7 @@ class MissCt(ShotEventTallyBase):
     """
     def __init__(self):
         super(MissCt, self).__init__(
-            count_play=lambda play: isinstance(play.event, EV.Miss)
+            count_play=lambda play: isinstance(play.event, EV.Miss) and play.period <= 3
         )
 
 
@@ -201,7 +201,7 @@ class EvenStMissCt(ShotEventTallyBase):
     """
     def __init__(self):
         super(EvenStMissCt, self).__init__(
-            count_play=lambda play: isinstance(play.event, EV.Miss) and play.strength == St.Even
+            count_play=lambda play: isinstance(play.event, EV.Miss) and play.strength == St.Even and play.period <= 3
         )
 
 
@@ -217,7 +217,7 @@ class EvenStClMissCt(ShotEventTallyBase):
     def __init__(self):
         self.score = Score()
         super(EvenStClMissCt, self).__init__(
-            count_play=lambda play: isinstance(play.event, EV.Miss) and play.strength == St.Even and is_close(self.score, play)
+            count_play=lambda play: isinstance(play.event, EV.Miss) and play.strength == St.Even and is_close(self.score, play) and play.period <= 3
         )
 
     def update(self, play):
@@ -235,7 +235,7 @@ class EvenStShotCt(ShotEventTallyBase):
     """
     def __init__(self):
         super(EvenStShotCt, self).__init__(
-            count_play=lambda play: isinstance(play.event, EV.Shot) and play.strength == St.Even
+            count_play=lambda play: isinstance(play.event, EV.Shot) and play.strength == St.Even and play.period <= 3
         )
 
 
@@ -250,12 +250,13 @@ class EvenStClShotCt(ShotEventTallyBase):
     def __init__(self):
         self.score = Score()
         super(EvenStClShotCt, self).__init__(
-            count_play=lambda play: isinstance(play.event, EV.Shot) and play.strength == St.Even and is_close(self.score, play)
+            count_play=lambda play: isinstance(play.event, EV.Shot) and play.strength == St.Even and is_close(self.score, play) and play.period <= 3
         )
 
     def update(self, play):
         self.score.update(play)
         super(EvenStClShotCt, self).update(play)
+
 
 class ShotAttemptCt(ShotEventTallyBase):
     """
@@ -266,7 +267,7 @@ class ShotAttemptCt(ShotEventTallyBase):
     """
     def __init__(self):
         super(ShotAttemptCt, self).__init__(
-            count_play=lambda play: isinstance(play.event, EV.ShotAttempt)
+            count_play=lambda play: isinstance(play.event, EV.ShotAttempt) and play.period <= 3
         )
 
 
@@ -280,7 +281,7 @@ class EvenStShotAttCt(ShotEventTallyBase):
     """
     def __init__(self):
         super(EvenStShotAttCt, self).__init__(
-            count_play=lambda play: isinstance(play.event, EV.ShotAttempt) and play.strength == St.Even
+            count_play=lambda play: isinstance(play.event, EV.ShotAttempt) and play.strength == St.Even and play.period <= 3
         )
 
 
@@ -295,7 +296,7 @@ class EvenStClShotAttCt(ShotEventTallyBase):
     def __init__(self):
         self.score = Score()
         super(EvenStClShotAttCt, self).__init__(
-            count_play=lambda play: isinstance(play.event, EV.ShotAttempt) and play.strength == St.Even and is_close(self.score, play)
+            count_play=lambda play: isinstance(play.event, EV.ShotAttempt) and play.strength == St.Even and is_close(self.score, play) and play.period <= 3
         )
 
     def update(self, play):
@@ -414,7 +415,7 @@ class Fenwick(ShotEventTallyBase):
 
                 close = (scr <= 2 and play.period < 3) or (scr <= 1 and play.period >= 3)
 
-            return is_p_type and close
+            return is_p_type and close and play.period <= 3
 
         super(Fenwick, self).__init__(
             count_play=lambda play: _count_play(self, play)
